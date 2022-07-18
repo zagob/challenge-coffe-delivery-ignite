@@ -11,7 +11,7 @@ import { ProductItem } from "../../components/ProductItem";
 import { useContext } from "react";
 import { CartContext } from "../../hooks/CartContext";
 
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 export function Home() {
   const { dataCoffees } = useContext(CartContext);

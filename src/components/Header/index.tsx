@@ -28,7 +28,7 @@ export function Header() {
             weight="fill"
             color={`${defaultThemeColor["purple"]}`}
           />
-          <span>Porto Alegre, RS</span>
+          <span>São Paulo, SP</span>
         </ButtonLocation>
         <Link to="/checkout">
           <ButtonCart>
