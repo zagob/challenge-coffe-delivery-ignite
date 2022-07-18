@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { data } from "../data";
 
 interface CartContextProviderProps {
@@ -58,6 +59,17 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
       setDataCart(JSON.parse(getProductCartLocalStorage));
     }
   }, []);
+
+  useEffect(() => {
+    if (dataCart.length > 0) {
+      localStorage.setItem("@coffeDelivery:cart", JSON.stringify(dataCart));
+    }
+  }, [
+    onPlusQuantityProductCart,
+    onMinusQuantityProductCart,
+    onAddItemCart,
+    onRemoveProductCart,
+  ]);
 
   function onPlusQuantityProduct(id: number) {
     setDataCoffees((old) =>
@@ -119,29 +131,13 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
       return;
     }
 
+    toast.success("Produto adicionado ao carrinho");
     const newObjProduct = {
       ...product,
       idCart: new Date().getTime(),
     };
 
-    const getProductCartLocalStorage = localStorage.getItem(
-      "@coffeDelivery:cart"
-    );
-
     setDataCart((old) => [...old, newObjProduct]);
-
-    let arr = [];
-
-    if (!getProductCartLocalStorage) {
-      arr = [newObjProduct];
-
-      localStorage.setItem("@coffeDelivery:cart", JSON.stringify(arr));
-      return;
-    }
-
-    arr = [...JSON.parse(getProductCartLocalStorage), newObjProduct];
-
-    localStorage.setItem("@coffeDelivery:cart", JSON.stringify(arr));
   }
 
   function onRemoveProductCart(idCart: number) {

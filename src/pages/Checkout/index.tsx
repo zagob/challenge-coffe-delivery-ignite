@@ -5,12 +5,14 @@ import {
   MapPinLine,
   Money,
 } from "phosphor-react";
-import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { ChangeEvent, useContext, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { ButtonPayament } from "../../components/ButtonPayament";
 import { CartContext } from "../../hooks/CartContext";
 import { FormatCurrencyNumber } from "../../utils/formatCurrencyNumber";
 import { ItensCart } from "./components/ItensCart";
+import cep from "cep-promise";
 import {
   ButtonConfirmRequest,
   CheckoutContainerForm,
@@ -26,22 +28,69 @@ import {
   DeliveryText,
   HeaderTitle,
   HeaderTitlePayament,
+  InputForm,
   SectionCart,
   SectionCompleteRequest,
   TotalValueItensText,
   TotalValueText,
 } from "./styles";
+import InputMask from "react-input-mask";
+import toast, { Toaster } from "react-hot-toast";
+
+interface dataFormProps {
+  cep: number;
+  city: string;
+  complement: string;
+  district: string;
+  number: number;
+  street: string;
+  uf: string;
+}
 
 export function Checkout() {
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<dataFormProps>();
   const { dataCart } = useContext(CartContext);
+  const [optionPayment, setOptionPayment] = useState("");
 
   const totalItens = dataCart.reduce((acc, value) => {
     return acc + value.price * value.quantity;
   }, 0);
 
   const valueDelivery = 3.5;
+  function handleSubmitForm(data: dataFormProps) {
+    localStorage.setItem(
+      "@coffeDelivery:address",
+      JSON.stringify({ ...data, payment: optionPayment })
+    );
+    navigate("/success");
+  }
+  // 17012-634
+  async function handleChange(e: ChangeEvent) {
+    const getCep = watch("cep");
+    if (String(getCep).length === 9) {
+      const c = await cep(getCep);
+      if (c) {
+        toast.success("Cep adicionado");
+        setValue("street", c.street);
+        setValue("district", c.neighborhood);
+        setValue("city", c.city);
+        setValue("uf", c.state);
+      } else {
+        return;
+      }
+    }
+  }
+
   return (
-    <CheckoutContainerForm>
+    <CheckoutContainerForm onSubmit={handleSubmit(handleSubmitForm)}>
+      <Toaster />
       <SectionCompleteRequest>
         <h2>Complete seu pedido</h2>
 
@@ -54,20 +103,66 @@ export function Checkout() {
         </HeaderTitle>
 
         <ContentInput>
-          <ContentCep>
-            <input placeholder="CEP" />
+          <ContentCep error={!!errors?.cep}>
+            <InputMask
+              mask="99999-999"
+              placeholder="CEP: (00000-000)"
+              {...register("cep", {
+                required: true,
+                max: 8,
+                pattern: {
+                  value: /^[0-9]{5}-[0-9]{3}$/,
+                  message: "Invalid cep",
+                },
+                onBlur: (e) => handleChange(e),
+              })}
+            />
+            {errors.cep && <label>* CEP é obrigatório</label>}
           </ContentCep>
           <ContentStreet>
-            <input placeholder="RUA" />
+            <InputForm
+              error={!!errors?.street}
+              {...register("street", { required: true })}
+              placeholder="RUA"
+            />
+            {errors.street && <label>* Rua é obrigatório</label>}
           </ContentStreet>
           <ContentNumber>
-            <input placeholder="Número" />
-            <input placeholder="Complemento" />
+            <div>
+              <InputForm
+                error={!!errors?.number}
+                {...register("number", { required: true })}
+                placeholder="Número"
+              />
+              {errors.number && <label>* Número é obrigatório</label>}
+            </div>
+            <InputForm {...register("complement")} placeholder="Complemento" />
           </ContentNumber>
           <ContentCity>
-            <input placeholder="Bairro" />
-            <input placeholder="Cidade" />
-            <input placeholder="UF" />
+            <div>
+              <InputForm
+                error={!!errors?.district}
+                {...register("district", { required: true })}
+                placeholder="Bairro"
+              />
+              {errors.district && <label>* Bairro é obrigatório</label>}
+            </div>
+            <div>
+              <InputForm
+                error={!!errors?.city}
+                {...register("city", { required: true })}
+                placeholder="Cidade"
+              />
+              {errors.city && <label>* Cidade é obrigatório</label>}
+            </div>
+            <div>
+              <InputForm
+                error={!!errors?.uf}
+                {...register("uf", { required: true })}
+                placeholder="UF"
+              />
+              {errors.uf && <label>* UF é obrigatório</label>}
+            </div>
           </ContentCity>
         </ContentInput>
 
@@ -84,14 +179,26 @@ export function Checkout() {
 
           <ContentButtonsPayament>
             <ButtonPayament
+              active={optionPayment === "CREDIT"}
+              value={optionPayment}
+              onClick={() => setOptionPayment("CREDIT")}
               icon={<CreditCard size={16} />}
               title="Cartão de crédito"
             />
             <ButtonPayament
+              active={optionPayment === "DEBIT"}
+              value={optionPayment}
+              onClick={() => setOptionPayment("DEBIT")}
               icon={<Bank size={16} />}
               title="Cartão de débito"
             />
-            <ButtonPayament icon={<Money size={16} />} title="Dinheiro" />
+            <ButtonPayament
+              active={optionPayment === "MONEY"}
+              onClick={() => setOptionPayment("MONEY")}
+              value={optionPayment}
+              icon={<Money size={16} />}
+              title="Dinheiro"
+            />
           </ContentButtonsPayament>
         </ContentPayament>
       </SectionCompleteRequest>
@@ -127,11 +234,12 @@ export function Checkout() {
             <span>{FormatCurrencyNumber(totalItens + valueDelivery)}</span>
           </TotalValueText>
 
-          <Link to="/success">
-            <ButtonConfirmRequest disabled={dataCart.length === 0}>
-              Confirmar pedido
-            </ButtonConfirmRequest>
-          </Link>
+          <ButtonConfirmRequest
+            type="submit"
+            disabled={dataCart.length === 0 || optionPayment.length === 0}
+          >
+            Confirmar pedido
+          </ButtonConfirmRequest>
         </ContentCheckoutValue>
       </SectionCart>
     </CheckoutContainerForm>

@@ -7,7 +7,6 @@ import {
   ProductItemContainer,
 } from "./styles";
 
-import expressoTradicional from "../../assets/expresso-tradicional.svg";
 import { ButtonQuantityItem } from "../ButtonQuantityItem";
 import { ButtonCart } from "../ButtonCart";
 import { useContext } from "react";

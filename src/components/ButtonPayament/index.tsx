@@ -1,13 +1,20 @@
+import { ButtonHTMLAttributes } from "react";
 import { ButtonContainer } from "./styles";
 
-interface ButtonPayamentProps {
+interface ButtonPayamentProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon: React.ReactElement;
   title: string;
+  active: boolean;
 }
 
-export function ButtonPayament({ icon, title }: ButtonPayamentProps) {
+export function ButtonPayament({
+  active,
+  icon,
+  title,
+  ...rest
+}: ButtonPayamentProps) {
   return (
-    <ButtonContainer type="button">
+    <ButtonContainer active={active} {...rest} type="button">
       {icon}
       {title}
     </ButtonContainer>

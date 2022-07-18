@@ -10,6 +10,15 @@ export const MainContainer = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+
+  @media (max-width: 950px) {
+    position: relative;
+    justify-content: center;
+    img {
+      position: absolute;
+      opacity: 0.2;
+    }
+  }
 `;
 
 export const Content = styled.div`
@@ -38,6 +47,10 @@ export const ContentText = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   margin-top: 3rem;
+
+  @media (max-width: 1090px) {
+    grid-template-columns: 1fr;
+  }
 
   span {
     font-size: 1rem;
@@ -86,8 +99,8 @@ export const ContentText = styled.div`
 `;
 
 export const TitleProduct = styled.h2`
-    font-family: 'Baloo 2';
-    margin-top: 3rem;
+  font-family: "Baloo 2";
+  margin-top: 3rem;
 `;
 
 export const ContentProducts = styled.main`
@@ -95,4 +108,8 @@ export const ContentProducts = styled.main`
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
+
+  @media (max-width: 600px) {
+    justify-content: center;
+  }
 `;

@@ -11,11 +11,14 @@ import { ProductItem } from "../../components/ProductItem";
 import { useContext } from "react";
 import { CartContext } from "../../hooks/CartContext";
 
+import toast, { Toaster } from "react-hot-toast";
+
 export function Home() {
   const { dataCoffees } = useContext(CartContext);
 
   return (
     <>
+      <Toaster />
       <MainContainer>
         <Content>
           <h1>Encontre o café perfeito para qualquer hora do dia</h1>

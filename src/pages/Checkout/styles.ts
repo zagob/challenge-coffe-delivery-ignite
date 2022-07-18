@@ -39,10 +39,15 @@ export const ContentInput = styled.div`
   flex-direction: column;
   gap: 1rem;
 
+  label {
+    font-size: 0.8rem;
+    color: red;
+    font-family: "Baloo 2";
+  }
+
   input {
     height: 42px;
     background-color: ${(props) => props.theme["base-button"]};
-    border: 1px solid ${(props) => props.theme["base-input"]};
     color: ${(props) => props.theme["base-text"]};
     border-radius: 4px;
     padding: 12px;
@@ -60,9 +65,20 @@ export const ContentInput = styled.div`
   }
 `;
 
-export const ContentCep = styled.div`
+interface InputFormProps {
+  error?: boolean;
+}
+
+export const ContentCep = styled.div<InputFormProps>`
+  display: flex;
+  flex-direction: column;
+
   input {
     width: 200px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: ${({ error, theme }) =>
+      error ? theme["red"] : theme["base-input"]};
   }
 `;
 
@@ -78,13 +94,21 @@ export const ContentNumber = styled.div`
   input:last-child {
     flex: 1;
   }
+
+  div {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 export const ContentCity = styled.div`
   display: flex;
   gap: 1rem;
 
-  input {
+  div {
+    display: flex;
+    flex-direction: column;
+
     &:nth-child(2) {
       flex: 1;
     }
@@ -171,5 +195,15 @@ export const ButtonConfirmRequest = styled.button`
   &:disabled {
     cursor: not-allowed;
     opacity: 0.6;
+  }
+`;
+
+export const InputForm = styled.input<InputFormProps>`
+  border-style: solid;
+  border-width: 1px;
+  border-color: ${({ error, theme }) =>
+    error ? theme["red"] : theme["base-input"]};
+  &:focus {
+    outline: ${(props) => `1px solid ${props.theme["yellow"]}`};
   }
 `;
