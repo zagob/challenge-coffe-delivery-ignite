@@ -19,6 +19,12 @@ export const MainContainer = styled.div`
       opacity: 0.2;
     }
   }
+
+  @media (max-width: 600px) {
+    img {
+      width: 100%;
+    }
+  }
 `;
 
 export const Content = styled.div`
