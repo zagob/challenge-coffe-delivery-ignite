@@ -10,6 +10,11 @@ export const CheckoutContainerForm = styled.form`
     font-weight: bold;
     color: ${(props) => props.theme["base-subtitle"]};
   }
+
+  @media (max-width: 1060px) {
+    flex-direction: column;
+    padding: 1rem 0.4rem;
+  }
 `;
 
 export const HeaderTitleBase = styled.div`
@@ -99,6 +104,10 @@ export const ContentNumber = styled.div`
     display: flex;
     flex-direction: column;
   }
+  @media (max-width: 600px) {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const ContentCity = styled.div`
@@ -117,6 +126,16 @@ export const ContentCity = styled.div`
       width: 60px;
     }
   }
+
+  @media (max-width: 720px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 600px) {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const ContentPayament = styled.div`
@@ -132,6 +151,10 @@ export const HeaderTitlePayament = styled(HeaderTitleBase)`
 export const ContentButtonsPayament = styled.div`
   display: flex;
   gap: 1rem;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
 `;
 
 export const SectionCompleteRequest = styled.section`
@@ -143,10 +166,20 @@ export const ContentCartItens = styled.div`
   height: 400px;
   overflow-y: scroll;
   margin-bottom: 2rem;
+
+  @media (max-width: 600px) {
+    padding: 0;
+    margin: 1rem 0 0 0;
+    width: 100%;
+  }
 `;
 
 export const SectionCart = styled.section`
   width: 448px;
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 `;
 
 export const ContentCheckoutValue = styled.div`

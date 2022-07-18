@@ -3,8 +3,6 @@ import styled from "styled-components";
 export const ContentItem = styled.div`
   display: flex;
   position: relative;
-  /* padding: 2.5rem;
-  border-bottom: 1px solid ${(props) => props.theme["base-button"]}; */
   & + div {
     margin-top: 3rem;
   }
