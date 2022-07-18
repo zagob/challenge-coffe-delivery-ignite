@@ -6,6 +6,16 @@ export const SuccessContainer = styled.div`
   height: calc(100vh - 22rem);
 
   gap: 8rem;
+
+  @media (max-width: 1000px) {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+
+    img {
+      width: 100%;
+    }
+  }
 `;
 
 export const SectionLeft = styled.div`
