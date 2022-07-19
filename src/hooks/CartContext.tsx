@@ -38,6 +38,7 @@ interface CartContextProps {
   onMinusQuantityProductCart: (idCart: number) => void;
   onRemoveProductCart: (idCart: number) => void;
   onAddItemCart: (id: number) => void;
+  onCleanCart: () => void;
 }
 
 export const CartContext = createContext({} as CartContextProps);
@@ -160,6 +161,10 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
     setDataCart((old) => old.filter((item) => item.idCart !== idCart));
   }
 
+  function onCleanCart() {
+    setDataCart([]);
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -171,6 +176,7 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
         onMinusQuantityProductCart,
         onRemoveProductCart,
         onAddItemCart,
+        onCleanCart,
       }}
     >
       {children}

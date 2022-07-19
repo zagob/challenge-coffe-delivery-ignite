@@ -56,7 +56,7 @@ export function Checkout() {
     watch,
     formState: { errors },
   } = useForm<dataFormProps>();
-  const { dataCart } = useContext(CartContext);
+  const { dataCart, onCleanCart } = useContext(CartContext);
   const [optionPayment, setOptionPayment] = useState("");
 
   const totalItens = dataCart.reduce((acc, value) => {
@@ -69,6 +69,7 @@ export function Checkout() {
       "@coffeDelivery:address",
       JSON.stringify({ ...data, payment: optionPayment })
     );
+    onCleanCart();
     navigate("/success");
   }
   // 17012-634
